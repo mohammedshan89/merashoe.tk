@@ -1,0 +1,81 @@
+<%- include('../layout/header.ejs')  %> 
+
+<%- include('../partials/user-navbar.ejs')  %> 
+
+<div class="container mt-4">
+    
+   
+  
+   <div class="table-responsive">
+      <table class="table" id="myTable">
+        <div class="table table-hover container">     
+          <thead>
+            <tr>
+              <th scope="col">No</th>
+              <th scope="col">ItemId</th>
+              <th scope="col">ProductName</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">price</th>
+              <th scope="col">Image</th>
+              <th scope="col">Status</th>
+  
+            
+              <th>Actions</th>
+              
+            </tr>
+          </thead>
+              <tbody>
+                
+                <% for(let i=0;i<indOrder.items.length;i++) { %> 
+                <tr>
+                  <th scope="row"><%= i+1  %> </th>
+                  
+                  
+                  <td><%= indOrder.items[i].itemId%></td>
+                  <td><%= indOrder.items[i].productName%></td>
+                  <td><%= indOrder.items[i].quantity%></td>
+                  <td><%= indOrder.items[i].price    %></td>
+                  <td><img id="" src="/images/<%= indOrder.items[i].image%>" style ="width: 5rem;height: '5rem';" alt=""></td>
+                  <td><%= indOrder.items[i].orderStatus%></td>
+                   
+                  <td>
+                    <% if(indOrder.items[i].orderStatus==="Vendor Cancelled"||indOrder.items[i].orderStatus==="User Cancelled"){%> 
+                     
+                     <i class="fa fa-times fa-3x" aria-hidden="true" style="color: red;"></i>
+                     <% }else if(indOrder.items[i].orderStatus==="Deliverd"){%> 
+                        <i class="fa fa-check fa-3x" style="color: green;" aria-hidden="true"></i>
+                     
+                        <% }else {%>
+                            <a href="/user-cancelOrder?id=<%= indOrder.items[i].itemId %>&orderId=<%= indOrder._id %> "> 
+                                <button class="btn btn-primary">CancelOrder</button></a>
+                                <% } %>  
+                  </td>
+                </tr>
+                <% }%> 
+
+                
+                
+              </tbody>
+          
+         
+      </table>
+
+      <div class="pt-5">
+        <h6 class="mb-0"><a href="/user-myorders " class="text-body"><i
+              class="fas fa-long-arrow-alt-left me-2"></i>Back to Orders</a></h6>
+      </div>
+    </div>
+  </div>
+    
+    
+    
+    
+  <script>
+    $(document).ready( function () {
+      $('#myTable').DataTable();
+  } );
+  </script>
+  <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+
+
+<%- include('../layout/footer.ejs')  %> 

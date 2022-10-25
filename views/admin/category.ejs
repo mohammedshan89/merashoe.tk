@@ -1,0 +1,64 @@
+<%- include('../layout/header.ejs')  %>
+<%- include('../partials/admin-navbar.ejs')  %> 
+
+<div class="wrapper container">
+    <div class="row justify-content-center mt-5"> 
+    <div class="col-5"> 
+        <form action="/admin-category" method="post"> 
+
+            
+            
+            <div class="form-group mt-3"> 
+                <label for="exampleInputExpertise1"></label> 
+                <input type="text" required name="category" class="form-control" id="">
+                <% if(validation.category) {%>
+                  <p style="color: red;"> Already added</p>
+                  <% } %>  
+            </div> 
+
+            <button type="submit" class="btn btn-warning mt-3">AddCategory</button> 
+            </div> 
+            
+        </form> 
+        
+    </div> 
+    
+ <div class="table-responsive">
+  <table class="table" id="myTable">
+    <table class="table table- mt-5">
+        <thead>
+          <tr>
+            <th scope="col">Number</th>
+            <th scope="col">Category</th>
+          </tr>
+        </thead>
+        <% object.forEach( ( item, index ) => {%> 
+
+        <tbody>
+            
+          <tr>
+            <th scope="row"><%= index+1%> </th>
+            <td><%= item.category %> </td>
+            <td><form action="/delete-category?id=<%= object._id %>&name=<%=item.category%> " method="post">
+                <button class="btn btn-danger" onclick="return  confirm('Are you want to Delete <%= item.category %>')"> Delete</button>
+            </form></td>
+          </tr>
+
+        </tbody>
+        <% }) %> 
+
+      </table>
+    </table>
+</div>
+</div> 
+</div>
+
+
+<script>
+  $(document).ready( function () {
+    $('#myTable').DataTable();
+} );
+</script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+
+<%- include('../layout/footer.ejs')  %> 

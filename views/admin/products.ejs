@@ -1,0 +1,81 @@
+
+<%- include('../layout/header.ejs')  %>
+<%- include('../partials/admin-navbar.ejs')  %> 
+
+
+  
+<div class="table-responsive container mt-5">
+  <div class="container mt-4"> 
+    <div class="row"> 
+        <div class="col-md-4 col-lg-2"> 
+          <a href="add-product"><button class="btn btn-primary  btn-block" type="button">Add Product</button></a> 
+        </div> 
+      </div> 
+  </div>
+  
+  <!-- <table class="table" id="myTable"> -->
+    <table class="table" id="myTable">
+      <thead>
+        <tr>
+          <th scope="col">Num</th>
+          <th scope="col">productName</th>
+          <th scope="col">price</th>
+          <th scope="col">Description</th>
+          <th scope="col">Stock</th>
+          <th scope="col">category</th>
+          
+          <th scope="col">image-1</th>
+          <th scope="col">image-2</th>
+          <th scope="col">Action</th>
+        </tr>
+  
+      </thead>
+
+     
+      <% for(let i =0; i< result.length; i++) {%> 
+      <tbody>
+     <tr>
+            <th scope="row"> <%=num++  %> </th>
+            <td><%= result[i].productName%> </td>
+            <td><%= result[i].price%> </td>
+            <td><%= result[i].description%> </td>
+            <td><%= result[i].stock%> </td>
+            <td><%= result[i].category%> </td>
+            <!-- <td><%= //result[i].subCategory%> </td> -->
+            <td><img id="" src="/images/<%= result[i].image1%>" style ="width: 5rem;height: '5rem';" alt=""></td>
+            <td><img id="" src="/images/<%= result[i].image2%>" style ="width: 5rem;height: '5rem';" alt=""></td>
+            
+            <td>
+              <a href="/admin_panel/edit-product?id=<%= result[i]._id  %> ">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </a>
+              <a href="/admin_panel/delete-product?id=<%= result[i]._id  %> ">
+                <i class="fa-solid fa-trash"></i>
+              </a>
+            </td>
+
+    
+            <!-- <form action="/adminal_panel/edit-product?id=  " >
+            <td ><button type="submit" class="btn btn-success">Edit</button></td>
+            </form>
+
+          
+            
+            <form action="">
+            <td><button type="submit" class="btn btn-danger">Delete</button></td>
+          </form> -->
+          </tr>
+     
+      </tbody>
+      <% } %> 
+  </table>
+
+<script>
+  $(document).ready( function () {
+    $('#myTable').DataTable();
+} );
+</script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+
+
+<%- include('../layout/footer.ejs')  %> 

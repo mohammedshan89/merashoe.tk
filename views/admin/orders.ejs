@@ -1,0 +1,73 @@
+<%- include('../layout/header.ejs')  %>
+<%- include('../partials/admin-navbar.ejs')  %> 
+
+
+
+
+ 
+<div class="container mt-4">
+  
+ 
+
+ <div class="table-responsive">
+    <table class="table" id="myTable">
+      <div class="table table-hover container">     
+        <thead>
+          <tr>
+            <th scope="col">No</th>
+            <th scope="col">OrderId</th>
+            <th scope="col">Date</th>
+            <th scope="col">CartBill</th>
+            <th scope="col">PaymentMode</th>
+            <th scope="col">CouponCode</th>
+            <th scope="col">CouponValue</th>
+            <th scope="col">OrderBill</th>
+
+          
+            <th>       Edit/Delete</th>
+            
+          </tr>
+        </thead>
+            <tbody>
+              
+              <% for(let i=0;i<orders.length;i++) { %> 
+              <tr>
+                <th scope="row"><%= i+1  %> </th>
+                
+
+                <td><%= orders[i].user %> </td>
+                <td><%= orders[i].orderDate.toLocaleDateString() %> </td>
+                <td><%= orders[i].cartBill %> </td>
+                <td><%= orders[i].paymentMethod %> </td>
+                <td><%= orders[i].couponCode%> </td>
+                <td><%= orders[i].couponValue%> </td>
+                <td><%= orders[i].orderBill%> </td>
+
+                
+                
+                <td>
+                  
+                   <a href="/orders-itemsview?id=<%= orders[i]._id %>"> 
+                  <button class="btn btn-success"> ViewDetails</button></a>
+                  
+                </td>
+              </tr>
+              <% }%> 
+              
+            </tbody>
+        
+       
+    </table>
+  </div>
+</div>
+  
+<script>
+  $(document).ready( function () {
+    $('#myTable').DataTable();
+} );
+</script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+  
+  
+
+<%- include('../layout/footer.ejs')  %> 

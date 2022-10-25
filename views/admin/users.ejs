@@ -1,0 +1,72 @@
+<%- include('../layout/header.ejs')  %>
+<%- include('../partials/admin-navbar.ejs')  %> 
+
+
+
+
+ 
+<div class="container mt-4">
+  
+ 
+
+ <div class="table-responsive">
+    <table class="table" id="myTable">
+      <div class="table table-hover container">     
+        <thead>
+          <tr>
+            <th scope="col">No</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Mobile</th>
+            <th scope="col">Password</th>
+          
+            <th>       Edit/Delete</th>
+            
+          </tr>
+        </thead>
+            <tbody>
+              
+              <% for(let i=0;i<users.length;i++) { %> 
+              <tr>
+                <th scope="row"><%= i+1  %> </th>
+                
+
+                <td><%= users[i].name %> </td>
+                <td><%= users[i].email %> </td>
+                <td><%= users[i].mobile %> </td>
+                <td><%= users[i].password %> </td>
+                
+                
+                <td>
+                  <% if(users[i].blockStatus) {%> 
+                  <form action="/admin_panel/users/unblock?id=<%= users[i]._id  %> " method="post">
+                      <button class="btn btn-danger" onclick="return  confirm('Are you want to block <%= users[i].name %>')"> Unblock</button>
+                  </form>
+                  <% }else{%> 
+
+                  <form action="/admin_panel/users/block?id=<%= users[i]._id %> " method="post">
+                  <button class="btn btn-success " onclick="return  confirm('Are you want to block <%= users[i].name %>')"> Block</button>
+                  <% } %> 
+                  </form>
+                </td>
+              </tr>
+              <% }%> 
+              
+            </tbody>
+        
+       
+    </table>
+  </div>
+</div>
+  
+  
+  
+  
+<script>
+  $(document).ready( function () {
+    $('#myTable').DataTable();
+} );
+</script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+
+<%- include('../layout/footer.ejs')  %> 

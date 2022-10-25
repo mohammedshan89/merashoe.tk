@@ -1,0 +1,110 @@
+<%- include('../layout/header.ejs')  %>
+<%- include('../partials/admin-navbar.ejs')  %> 
+
+
+
+
+ 
+<div class="container mt-4">
+  
+  <div class="btn-group pt-5 contact">
+    <a class="btn btn-primary dropdown-toggle mb-2" data-bs-toggle="dropdown" aria-expanded="false">
+        Download
+    </a>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="/admin/exportExcel">Excel</a></li>
+        <li><button class="dropdown-item" onclick="myfun('pt')">Pdf</button></li>
+  
+    </ul>
+  </div>  
+ 
+
+ <div class="table-responsive">
+  <div class="table-wrap" id="pt">
+    <table class="table" id="myTable">
+      <div class="table table-hover container">     
+        <thead>
+          <tr>
+            <th scope="col">No</th>
+            <th scope="col">ItemId</th>
+            <th scope="col">ProductName</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">price</th>
+            <th scope="col">Image</th>
+            <th scope="col">Status</th>
+
+          
+            <th>Actions</th>
+            
+          </tr>
+        </thead>
+            <tbody>
+              
+              <% for(let i=0;i<indOrder.items.length;i++) { %> 
+              <tr>
+                <th scope="row"><%= i+1  %> </th>
+                
+                
+                <td><%= indOrder.items[i].itemId%></td>
+                <td><%= indOrder.items[i].productName%></td>
+                <td><%= indOrder.items[i].quantity%></td>
+                <td><%= indOrder.items[i].price%></td>
+                <td><img id="" src="/images/<%= indOrder.items[i].image%>" style ="width: 5rem;height: '5rem';" alt=""></td>
+                <td><%= indOrder.items[i].orderStatus%></td>
+                 
+                <td>
+                    <% if(indOrder.items[i].orderStatus==="processed") {%> 
+                   <a href="/order-update?id=<%= indOrder.items[i].itemId %>&orderId=<%= indOrder._id %>&action=accept"> 
+                  <button class="btn btn-primary">AcceptOrder</button></a>
+                  <a href="/order-update?id=<%= indOrder.items[i].itemId %>&orderId=<%= indOrder._id %>&action=cancel"> 
+                    <button class="btn btn-danger">Cancel Order</button></a>
+                    <% }else if(indOrder.items[i].orderStatus==="Proceed"){%>
+                      <a href="/order-update?id=<%= indOrder.items[i].itemId %>&orderId=<%= indOrder._id %>&action=shipp"> 
+                            <button class="btn btn-warning">Shipped</button></a>
+                        <% }else if(indOrder.items[i].orderStatus==="Shipped"){%>
+                          <a href="/order-update?id=<%= indOrder.items[i].itemId %>&orderId=<%= indOrder._id %>&action=deliver"> 
+                                <button class="btn btn-success">Deliverd</button></a>
+                            <% }else if(indOrder.items[i].orderStatus==="Deliverd") {%> 
+                                <i class="fa fa-check fa-3x" aria-hidden="true"></i>
+                                <% } else{%>
+                                    <i class="fa fa-times fa-3x" aria-hidden="true" style="color: red;"></i>
+                                    <% } %>  
+                            
+                </td>
+              </tr>
+              <% }%> 
+              
+            </tbody>
+        
+       
+    </table>
+  </div>
+  </div>
+</div>
+  
+<script>
+  $(document).ready( function () {
+    $('#myTable').DataTable();
+} );
+</script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+
+<script>
+  console.log("script working")
+  function myfun(pt) {
+      var bk = document.body.innerHTML;
+      var dv = document.getElementById('pt').innerHTML;
+      document.body.innerHTML = dv;
+      document.body.style.padding = "20px"
+      window.print();
+      location.reload();
+  }
+  $(document).ready(function () {
+      $('#myTable').DataTable()
+  });
+</script>
+
+  
+
+
+<%- include('../layout/footer.ejs')  %> 
