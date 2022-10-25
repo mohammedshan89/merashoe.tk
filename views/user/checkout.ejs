@@ -240,7 +240,7 @@
         
         if(response.codSuccess){
             console.log("COD working")
-            location.replace('payment-success?value=cod')
+            location.replace('payment-success')
                 // window.open('/userhome/success')
         }else if(response.razorpay){
             console.log("razorpay working")
@@ -283,7 +283,7 @@
   rzp1.open();
   }
   function RazoverifyPayment(payment,order){
-    location.replace('/payment-success?value=razorpay')
+    location.replace('/payment-success')
 
     $.ajax({
       url:'/userhome/razo-verify-payment',

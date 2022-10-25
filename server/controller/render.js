@@ -402,6 +402,7 @@ exports.addAddress = (req, res) => {
 
 
 exports.successPage = ((req, res) => {
+   if(req.session.order){
     const order = req.session.order
     const coupon = req.session.coupon || ''
     const userId = req.session.userId
@@ -449,6 +450,17 @@ exports.successPage = ((req, res) => {
         .catch((err)=> {
             console.log(err)
         })
+   }else{
+    orderHelpers.findCategory()
+    .then((object) => {
+        console.log("orderCreated")
+        res.render('user/payment-success',{ object })
+    })
+    .catch((err)=> {
+        console.log(err)
+    })
+   }
+   
 })
 
 
@@ -549,7 +561,7 @@ exports.paypal = (req, res) => {
                 "payment_method": "paypal"
             },
             "redirect_urls": {
-                "return_url": 'http://localhost:5050/payment-success?value=paypal',
+                "return_url": 'http://localhost:5050/payment-success',
                 "cancel_url": "http://127.0.0.1:3000/err"
             },
             "transactions": [{
