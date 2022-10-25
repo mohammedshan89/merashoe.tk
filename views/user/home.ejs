@@ -1,14 +1,12 @@
 <%- include('../layout/header.ejs')  %>
     <%- include('../partials/user-navbar.ejs')  %> 
         <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Shoes speaks louder than words</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Sunday is my favourite ‘S’ word after shoes</p>
-                </div>
-            </div>
-        </header>
+        <img src="https://img.freepik.com/premium-photo/colorful-sport-shoes-mustard-color-wall_151013-4913.jpg?w=1060" class="d-block w-100 rounded-5 p-2" alt="not loaded">
+        <div class="carousel-caption d-none d-md-block p-5" style="color: #e8e81e;">
+            <h1 class="fw-bolder">Shoes speaks louder than words</h1>
+            <h3 class="fw-bolder">Sunday is my favourite ‘S’ word after shoes</h3>
+        </div>  
+        
         <!-- Section-->
         <section class="py-5">
             <div class="container px-4 px-lg-5 mt-5">
@@ -16,7 +14,7 @@
                     
 
                 <% for(let i=0; i<result.length; i++) { %> 
-                    <div class="col mb-5n">
+                    <div class="col mb-5n col-12">
                         <div class="card h-100">
                             <!-- Sale badge-->
                             
@@ -34,13 +32,7 @@
                                     <!-- Product name-->
                                     <h5 class="fw-bolder"><%= result[i].productName %> </h5>
                                     <!-- Product reviews-->
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                    </div>
+                                    
                                     <!-- Product price-->
                                     <span style=" margin-right: 10px; font-size: 20px; font-weight: 600;">₹ <%= result[i].price %></span>   
                                     <span class="text-muted text-decoration-line-through" style="font-size: 16px">  </span> 
@@ -63,7 +55,7 @@
             </div>
         </section>
         <!-- Footer-->
-        <footer class="py-5 bg-dark">
+        <footer class="py-5 bg-danger">
             <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2022</p></div>
         </footer>
         <!-- Bootstrap core JS-->

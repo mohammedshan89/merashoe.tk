@@ -72,7 +72,7 @@ exports.adminLoggedOut = (req, res, next) => {
     if (!session.adminId) {
         next()
     } else
-        res.redirect('/admin_panel')
+        res.redirect('/admin_panel/dashboard')
 }
 
 // get request of home page
