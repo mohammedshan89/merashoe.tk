@@ -86,7 +86,7 @@ exports.userHome = (req, res) => {
                     .then(object => {
                         if (result)
                             res.render('user/home', { result, object })
-                            validation.wishlist = false
+                        validation.wishlist = false
                     }).catch(err => console.log(err))
 
             }).catch(err => console.log(err))
@@ -296,49 +296,49 @@ exports.deleteCart = (req, res) => {
 exports.wishlist = (req, res) => {
     let userId = req.session.userId
     orderHelpers.findCategory()
-    .then((object) => {
-        return orderHelpers.findWishlist1(userId,object)
-    })
-    .catch((err)=>console.log(err))
-    .then(([wishlist,object]) => {
-        res.render('user/wishlist',{object, wishlist})
-    })
-    .catch(err=> console.log(err))
+        .then((object) => {
+            return orderHelpers.findWishlist1(userId, object)
+        })
+        .catch((err) => console.log(err))
+        .then(([wishlist, object]) => {
+            res.render('user/wishlist', { object, wishlist })
+        })
+        .catch(err => console.log(err))
 }
 
 exports.addWishlist = (req, res) => {
     const productId = req.query.id
-    const userId  = req.session.userId 
-    orderHelpers.findWishlist(productId,userId)
+    const userId = req.session.userId
+    orderHelpers.findWishlist(productId, userId)
         .then((wishlistItem) => {
-            if(wishlistItem){
-                 orderHelpers.deleteWishlist(wishlistItem._id)
-                 .then(()=> {
-                    res.redirect('/')
-                 }).catch(err => console.log(err)) 
-            }else{
-                 orderHelpers.findProduct(productId)
-                 .then((product) => {
-                    return orderHelpers.addWishlist(product,userId)
-                }).catch(err => console.log(err)) 
-                .then(()=> {
-                    res.redirect('/')
-                 })
-                 .catch(err => console.log(err))
+            if (wishlistItem) {
+                orderHelpers.deleteWishlist(wishlistItem._id)
+                    .then(() => {
+                        res.redirect('/')
+                    }).catch(err => console.log(err))
+            } else {
+                orderHelpers.findProduct(productId)
+                    .then((product) => {
+                        return orderHelpers.addWishlist(product, userId)
+                    }).catch(err => console.log(err))
+                    .then(() => {
+                        res.redirect('/')
+                    })
+                    .catch(err => console.log(err))
             }
-        }).catch(err => console.log(err)) 
-    }
+        }).catch(err => console.log(err))
+}
 
 exports.deleteWishlist1 = (req, res) => {
     let productId = req.query.id
     orderHelpers.deleteWishlist(productId)
-    .then(() => {
-        res.redirect('/')
-    })
-    .catch((err)=> {
-        console.log(err)
-    })
-}   
+        .then(() => {
+            res.redirect('/')
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+}
 
 exports.proceed = (req, res) => {
     User.findOne({ email: req.session.userId }, { address: 1, _id: 0 })
@@ -346,27 +346,27 @@ exports.proceed = (req, res) => {
 
             Cart.findOne({ owner: req.session.userId }, { items: 1, bill: 1 })
                 .then((cartItems) => {
-                    if(cartItems){
-                    Category.find()
-                        .then(object => {
-                            if (value.address.length === 0) {
-                                res.render('user/addNewAddress', { cartItems, value, object })
-
-                            } else {
-
-                                res.render('user/checkout', { cartItems, value, object, validation })
-                                validation.validCoupon = false
-                                validation.usedCoupon = false
-                                validation.dateExpiry = false
-                                validation.amountMin = false
-                            }
-                        }).catch((err) => console.log(err))
-                    }else{
-                     Category.find()
+                    if (cartItems) {
+                        Category.find()
                             .then(object => {
-                              res.render('user/addNewAddress', { cartItems, value, object })
-                        }).catch(err => console.log(err))  
-                    }   
+                                if (value.address.length === 0) {
+                                    res.render('user/addNewAddress', { cartItems, value, object })
+
+                                } else {
+
+                                    res.render('user/checkout', { cartItems, value, object, validation })
+                                    validation.validCoupon = false
+                                    validation.usedCoupon = false
+                                    validation.dateExpiry = false
+                                    validation.amountMin = false
+                                }
+                            }).catch((err) => console.log(err))
+                    } else {
+                        Category.find()
+                            .then(object => {
+                                res.render('user/addNewAddress', { cartItems, value, object })
+                            }).catch(err => console.log(err))
+                    }
                 }).catch((err) => conaole.log(err))
         }).catch((err) => console.log(err))
 
@@ -402,65 +402,65 @@ exports.addAddress = (req, res) => {
 
 
 exports.successPage = ((req, res) => {
-   if(req.session.order){
-    const order = req.session.order
-    const coupon = req.session.coupon || ''
-    const userId = req.session.userId
-    order.items.forEach((items) => {
-        items.orderStatus = "processed"
-    })
+    if (req.session.order) {
+        const order = req.session.order
+        const coupon = req.session.coupon || ''
+        const userId = req.session.userId
+        order.items.forEach((items) => {
+            items.orderStatus = "processed"
+        })
 
-    orderHelpers.updateStock(order.items)
-        .then(() => {
-            console.log("upadate stock")
-            return orderHelpers.createOrder(order)
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-        .then(() => {
-            
-            if(coupon){
-            return orderHelpers.couponUpdate(coupon,userId)
-            }else{
-                return
-            }
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-        .then(() => {
-            console.log("couponUpdate")
-            return orderHelpers.deleteCart(userId)
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-        .then(() => {
-            console.log('deleteCart')
-            return orderHelpers.findCategory()
-        })
-        .catch((err)=> {
-            console.log(err)
-        })
-        .then((object) => {
-            console.log("orderCreated")
-            res.render('user/payment-success',{ object })
-        })
-        .catch((err)=> {
-            console.log(err)
-        })
-   }else{
-    orderHelpers.findCategory()
-    .then((object) => {
-        console.log("orderCreated")
-        res.render('user/payment-success',{ object })
-    })
-    .catch((err)=> {
-        console.log(err)
-    })
-   }
-   
+        orderHelpers.updateStock(order.items)
+            .then(() => {
+                console.log("upadate stock")
+                return orderHelpers.createOrder(order)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+            .then(() => {
+
+                if (coupon) {
+                    return orderHelpers.couponUpdate(coupon, userId)
+                } else {
+                    return
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+            .then(() => {
+                console.log("couponUpdate")
+                return orderHelpers.deleteCart(userId)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+            .then(() => {
+                console.log('deleteCart')
+                return orderHelpers.findCategory()
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+            .then((object) => {
+                console.log("orderCreated")
+                res.render('user/payment-success', { object })
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    } else {
+        orderHelpers.findCategory()
+            .then((object) => {
+                console.log("orderCreated")
+                res.render('user/payment-success', { object })
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
 })
 
 
@@ -469,13 +469,13 @@ exports.checkout = (req, res) => {
 
     function createOrder(cart, user) {
         const newOrder = {
-            user : cart.owner,
-            items : cart.items,
-            address : user.address[addressIndex],
-            cartBill : cart.bill,
-            couponCode : coupon.couponCode || '',
-            couponValue : coupon.couponValue || '',
-            orderBill : orderBill || cart.bill,
+            user: cart.owner,
+            items: cart.items,
+            address: user.address[addressIndex],
+            cartBill: cart.bill,
+            couponCode: coupon.couponCode || '',
+            couponValue: coupon.couponValue || '',
+            orderBill: orderBill || cart.bill,
             paymentMethod: paymentMethod,
             orderDate: new Date(),
         }
@@ -487,21 +487,21 @@ exports.checkout = (req, res) => {
     const orderBill = req.body.bill
     const userId = req.session.userId
     const coupon = req.session.coupon || {}
-    
+
     orderHelpers.findUser(userId)
         .then((user) => {
-           return orderHelpers.findCart(user)
+            return orderHelpers.findCart(user)
         })
         .catch((err) => {
         })
         .then(([cart, user]) => {
-            if(paymentMethod === "cod") {
+            if (paymentMethod === "cod") {
                 createOrder(cart, user)
-                res.json({ codSuccess : true, value : paymentMethod })
-            }else if(paymentMethod === "paypal"){
+                res.json({ codSuccess: true, value: paymentMethod })
+            } else if (paymentMethod === "paypal") {
                 createOrder(cart, user)
-                res.json({ paypal : true })
-            }else if(paymentMethod === "razorpay"){
+                res.json({ paypal: true })
+            } else if (paymentMethod === "razorpay") {
                 createOrder(cart, user)
                 res.redirect('/razorpay')
             }
@@ -512,31 +512,31 @@ exports.checkout = (req, res) => {
 
 }
 
-    
 
-    exports.razorpay = (req, res) => {
-        const bill = Cart.findOne({ owner: req.session.userId })
-            .then((cart) => {
-                return cart.bill
-            })
-        bill.then((totalBill) => {
-            console.log(totalBill)
-            const razorpay = new Razorpay({
-                key_id: `${process.env.RAZORPAY_KEY_ID}`,
-                key_secret: `${process.env.RAZORPAY_KEY_SECRET}`
-            })
 
-            let options = {
-                amount: totalBill * 100,  // amount in the smallest currency unit
-                currency: "INR"
-            };
-
-            razorpay.orders.create(options, function (err, order) {
-                console.log(order);
-                res.json({ razorpay: true, order });
-            });
+exports.razorpay = (req, res) => {
+    const bill = Cart.findOne({ owner: req.session.userId })
+        .then((cart) => {
+            return cart.bill
         })
-    }
+    bill.then((totalBill) => {
+        console.log(totalBill)
+        const razorpay = new Razorpay({
+            key_id: `${process.env.RAZORPAY_KEY_ID}`,
+            key_secret: `${process.env.RAZORPAY_KEY_SECRET}`
+        })
+
+        let options = {
+            amount: totalBill * 100,  // amount in the smallest currency unit
+            currency: "INR"
+        };
+
+        razorpay.orders.create(options, function (err, order) {
+            console.log(order);
+            res.json({ razorpay: true, order });
+        });
+    })
+}
 
 exports.paypal = (req, res) => {
     let billAmount = Order.findOne({ owner: req.session.userId })
@@ -786,7 +786,7 @@ exports.productView = (req, res) => {
             Product.findOne({ _id: ObjectId(prodid) })
                 .then((product) => {
                     if (product) {
-                        res.render('user/productView', { product,object })
+                        res.render('user/productView', { product, object })
                     } else {
                         res.send('product not found')
                     }
@@ -900,30 +900,30 @@ exports.applyCoupon = (req, res) => {
                             .then((usedCoupon) => {
                                 if (usedCoupon) {
                                     validation.usedCoupon = true
-                                   
+
                                     res.json({})
                                 } else {
                                     if (coupons.couponExpiry >= Date.now()) {
                                         if (coupons.minBill > cart.bill) {
                                             validation.amountMin = true
-                                            
+
                                             res.json({})
                                         } else {
                                             req.session.coupon = coupons
                                             res.json({ couponValue: coupons.couponValue, couponCode: coupons.couponCode })
-                                          
+
                                         }
                                     } else {
 
                                         validation.dateExpiry = true
-                                       
+
                                         res.json({})
                                     }
                                 }
                             }).catch((err) => console.log(err))
                     } else {
                         validation.validCoupon = true
-                        
+
                         res.json({})
                     }
                 }).catch((err) => console.log(err))
@@ -1206,7 +1206,7 @@ exports.dash = (req, res) => {
         november = [],
         december = []
     ]
-    
+
     const quarters = [
         Q1 = [],
         Q2 = [],
@@ -1214,30 +1214,30 @@ exports.dash = (req, res) => {
         Q4 = []
     ]
 
-    const monthNum = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ]
+    const monthNum = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
-    Order.find({ "items.orderStatus" : "Deliverd" })
+    Order.find({ "items.orderStatus": "Deliverd" })
         .then((orders) => {
             monthNum.forEach((month, monthIndex) => {
                 orders.forEach((order, index) => {
-                    if(order.orderDate.getMonth()+1 == monthIndex+1 ) {
+                    if (order.orderDate.getMonth() + 1 == monthIndex + 1) {
                         months[monthIndex].push(order);
                     }
                 })
             })//
- 
+
             orders.forEach((order) => {
-                if(order.orderDate.getMonth()+1 <= 3){
+                if (order.orderDate.getMonth() + 1 <= 3) {
                     quarters[0].push(order)
-                }else if(order.orderDate.getMonth()+1 > 3 && order.orderDate.getMonth()+1 <= 6){
+                } else if (order.orderDate.getMonth() + 1 > 3 && order.orderDate.getMonth() + 1 <= 6) {
                     quarters[1].push(order)
-                }else if(order.orderDate.getMonth()+1 > 6 && order.orderDate.getMonth()+1 <= 9){
+                } else if (order.orderDate.getMonth() + 1 > 6 && order.orderDate.getMonth() + 1 <= 9) {
                     quarters[2].push(order)
-                }else if(order.orderDate.getMonth()+1 >9 && order.orderDate.getMonth()+1 <= 12){
+                } else if (order.orderDate.getMonth() + 1 > 9 && order.orderDate.getMonth() + 1 <= 12) {
                     quarters[3].push(order)
                 }
             })
-            
+
             const monthlySalesTurnover = [];
             const quarterlySalesTurnover = [];
             months.forEach((month) => {
@@ -1261,55 +1261,55 @@ exports.dash = (req, res) => {
                 return acc;
             }, 0)
 
-            res.json({ salesOfTheYear : monthlySalesTurnover, quarterlySales : quarterlySalesTurnover, annualSales : annualSales })
+            res.json({ salesOfTheYear: monthlySalesTurnover, quarterlySales: quarterlySalesTurnover, annualSales: annualSales })
         }).catch((err) => console.log(err))
 }
 
-exports.exportExcel=(req,res)=>{
+exports.exportExcel = (req, res) => {
     Order.find()
-    .then((SalesReport)=>{
-    try {
-      const workbook = new excelJs.Workbook();
-  
-      const worksheet = workbook.addWorksheet("Sales Report");
-  
-      worksheet.columns = [
-        { header: "S no.", key: "s_no" },
-        { header: "OrderID", key: "_id" },
-        { header: "Date", key: "orderDate" },
-        { header: "Products", key: "productName" },
-        { header: "Method", key: "paymentMethod" },
-    //     { header: "status", key: "status" },
-        { header: "Amount", key: "orderBill" },
-      ];
-      let counter = 1;
-      SalesReport.forEach((report) => {
-        report.s_no = counter;
-        report.productName = "";
-        // report.name = report.userid;
-        report.items.forEach((eachproduct) => {
-          report.productName += eachproduct.productName + ", ";
+        .then((SalesReport) => {
+            try {
+                const workbook = new excelJs.Workbook();
+
+                const worksheet = workbook.addWorksheet("Sales Report");
+
+                worksheet.columns = [
+                    { header: "S no.", key: "s_no" },
+                    { header: "OrderID", key: "_id" },
+                    { header: "Date", key: "orderDate" },
+                    { header: "Products", key: "productName" },
+                    { header: "Method", key: "paymentMethod" },
+                    //     { header: "status", key: "status" },
+                    { header: "Amount", key: "orderBill" },
+                ];
+                let counter = 1;
+                SalesReport.forEach((report) => {
+                    report.s_no = counter;
+                    report.productName = "";
+                    // report.name = report.userid;
+                    report.items.forEach((eachproduct) => {
+                        report.productName += eachproduct.productName + ", ";
+                    });
+                    worksheet.addRow(report);
+                    counter++;
+                });
+
+                worksheet.getRow(1).eachCell((cell) => {
+                    cell.font = { bold: true };
+                });
+
+
+                res.header(
+                    "Content-Type",
+                    "application/vnd.oppenxmlformats-officedocument.spreadsheatml.sheet"
+                );
+                res.header("Content-Disposition", "attachment; filename=report.xlsx");
+
+                workbook.xlsx.write(res);
+            } catch (err) {
+                console.log(err.message);
+            }
         });
-        worksheet.addRow(report);
-        counter++;
-      });
-  
-      worksheet.getRow(1).eachCell((cell) => {
-        cell.font = { bold: true };
-      });
-      
-  
-      res.header(
-        "Content-Type",
-        "application/vnd.oppenxmlformats-officedocument.spreadsheatml.sheet"
-      );
-      res.header("Content-Disposition", "attachment; filename=report.xlsx");
-  
-      workbook.xlsx.write(res);
-    } catch (err) {
-      console.log(err.message);
-    }
-  });
 
 }
 
@@ -1325,7 +1325,7 @@ exports.userLogout = (req, res) => {
     req.session.userId = ""
     req.session.otplogin = ''
     req.session.mobileNumber = ''
-    
+
     res.redirect('/')
 }
 
