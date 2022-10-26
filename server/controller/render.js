@@ -638,7 +638,7 @@ exports.editProfile = (req, res) => {
 exports.userOrders = (req, res) => {
     Category.find()
         .then(object => {
-            Order.find({ owner: req.session.userId })
+            Order.find({ user: req.session.userId })
                 .then((orders) => {
                     res.render('user/userOrder', { orders, object })
                 }).catch((err) => console.log(err))
