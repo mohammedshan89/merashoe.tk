@@ -992,7 +992,7 @@ exports.sendOtp = (req, res) => {
                 otp.sendOtp(req.body.mobile)
                 res.redirect('/verifyOtp')
             } else {
-                res.send('not found')
+                res.redirect('/user_registration')
             }
         }).catch((err) => console.log(err))
 }
